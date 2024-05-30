@@ -1,0 +1,38 @@
+{
+  "name": "confessioner",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "@sapphire",
+  "license": "UNLICENSE",
+  "type": "module",
+  "dependencies": {
+    "@sapphire/decorators": "^6.0.4",
+    "@sapphire/discord.js-utilities": "7.1.6",
+    "@sapphire/framework": "^5.0.7",
+    "@sapphire/plugin-logger": "^4.0.2",
+    "@sapphire/utilities": "^3.15.3",
+    "@skyra/env-utilities": "^1.3.0",
+    "colorette": "^2.0.20",
+    "discord.js": "^14.14.1"
+  },
+  "devDependencies": {
+    "@sapphire/cli": "^1.9.3",
+    "@sapphire/prettier-config": "^2.0.0",
+    "@sapphire/ts-config": "^5.0.0",
+    "@types/node": "^20.11.5",
+    "@types/ws": "^8.5.10",
+    "prettier": "^3.2.4",
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.3.3",
+    "@types/bun": "latest"
+  },
+  "scripts": {
+    "sapphire": "sapphire",
+    "generate": "sapphire generate",
+    "prod": "pm2 start pm2.config.cjs",
+    "prod:stop": "pm2 stop confessioner",
+    "prod:logs": "pm2 logs confessioner",
+    "dev": "bun --hot src/index.ts",
+    "format": "prettier --write \"src/\""
+  }
+}
