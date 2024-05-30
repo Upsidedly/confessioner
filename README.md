@@ -1,26 +1,11 @@
-# TypeScript Sapphire Bot example
+# Confessioner
 
-This is a basic setup of a Discord bot using the [sapphire framework][sapphire] written in TypeScript
+Simple Typescript application to send anonymous confessions in a Discord channel.
 
-## How to use it?
+## Changelog
 
-### Prerequisite
-
-```sh
-npm install
-```
-
-### Development
-
-This example can be run with `tsc-watch` to watch the files and automatically restart your bot.
-
-```sh
-npm run watch:start
-```
-
-### Production
-
-You can also run the bot with `npm dev`, this will first build your code and then run `node ./dist/index.js`. But this is not the recommended way to run a bot in production.
+### 1.0.0
+Main logic uploaded, rewrite from now lost legacy code.
 
 ## License
 
