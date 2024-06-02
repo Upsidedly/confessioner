@@ -1,5 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { load } from 'cheerio'
 import {
   ActionRowBuilder,
   EmbedBuilder,
@@ -32,14 +33,22 @@ export class UserCommand extends Command {
     );
   }
 
-  private generateEmbed(confession: string, image?: string) {
+  private async generateEmbed(confession: string, image?: string) {
     const embed = new EmbedBuilder()
       .setTitle('New Confession!')
-      .setDescription(confession)
       .setColor(0x2b2d31)
       .setTimestamp();
 
-    if (image) embed.setImage(image)
+    if (confession !== '.') embed.setDescription(confession)
+
+    if (image) {
+      if (image.startsWith('https://tenor.com/view')) {
+        const $ = load(await (await fetch(image)).text())
+        embed.setImage($('.Gif > img').attr()!.src)
+      } else {
+        embed.setImage(image)
+      }
+    }
 
     return embed
   }
@@ -56,7 +65,7 @@ export class UserCommand extends Command {
       });
 
       await this.container.confessChannel.send({
-        embeds: [this.generateEmbed(confession, interaction.options.getString('image') ?? undefined)]
+        embeds: [await this.generateEmbed(confession, interaction.options.getString('image') ?? undefined)]
       });
 
       return await interaction.editReply({
@@ -111,7 +120,7 @@ export class UserCommand extends Command {
     });
 
     await this.container.confessChannel.send({
-      embeds: [this.generateEmbed(modalConfession, submitted.fields.getTextInputValue('imageInput'))]
+      embeds: [await this.generateEmbed(modalConfession, submitted.fields.getTextInputValue('imageInput'))]
     });
 
     return await submitted.editReply({
