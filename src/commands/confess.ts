@@ -23,15 +23,25 @@ export class UserCommand extends Command {
             .setDescription('The confession to make')
             .setRequired(false)
         )
+        .addStringOption((input) =>
+          input
+            .setName('image')
+            .setDescription('Image to attach to the confession')
+            .setRequired(false)
+        )
     );
   }
 
-  private generateEmbed(confession: string) {
-    return new EmbedBuilder()
+  private generateEmbed(confession: string, image?: string) {
+    const embed = new EmbedBuilder()
       .setTitle('New Confession!')
       .setDescription(confession)
       .setColor(0x2b2d31)
       .setTimestamp();
+
+    if (image) embed.setImage(image)
+
+    return embed
   }
 
   public override async chatInputRun(
@@ -46,7 +56,7 @@ export class UserCommand extends Command {
       });
 
       await this.container.confessChannel.send({
-        embeds: [this.generateEmbed(confession)]
+        embeds: [this.generateEmbed(confession, interaction.options.getString('image') ?? undefined)]
       });
 
       return await interaction.editReply({
@@ -64,9 +74,18 @@ export class UserCommand extends Command {
         new TextInputBuilder({
           customId: 'confessionInput',
           label: 'What is the confession?',
-          style: TextInputStyle.Paragraph
+          style: TextInputStyle.Paragraph,
+          required: true
         })
-      )
+      ),
+      new ActionRowBuilder<TextInputBuilder>().addComponents(
+        new TextInputBuilder({
+          customId: 'imageInput',
+          label: 'Optional Image',
+          style: TextInputStyle.Short,
+          required: false
+        })
+      ),
     );
 
     await interaction.showModal(modal);
@@ -92,7 +111,7 @@ export class UserCommand extends Command {
     });
 
     await this.container.confessChannel.send({
-      embeds: [this.generateEmbed(modalConfession)]
+      embeds: [this.generateEmbed(modalConfession, submitted.fields.getTextInputValue('imageInput'))]
     });
 
     return await submitted.editReply({
